@@ -1,119 +1,112 @@
-import * as config from './config.json'
+// Configuration
+import * as config from "./config.json";
+import platforms from "./platforms";
+import externalLinks from "./externalLinks";
 
 // Libraries
-// const validator = Node.require('validator');
+import anime from "animejs";
+import { FaGlobeAmericas } from "react-icons/fa";
+import { useEffect } from "react";
 
-// Icons
-import {
-  FaInstagram, FaTwitch, FaTwitter, FaYoutube, FaLinkedinIn, 
-  FaFacebookF, FaSpotify, FaPatreon, FaGlobeAmericas, FaGithub
-} from 'react-icons/fa';
+export type LinkType = {
+  platform: string; // Platform where the link is from. e.g.: 'twitch'
+  description: string; // Description of the link. e.g.: 'My twitch channel'
+  url: string; // URL of the link. e.g.: 'https://twitch.tv/Ti7oyan'
+  customColor?: string; // Custom color, if desired. USES TAILWIND CLASSES e.g.: 'bg-blue-500'
+};
 
-// Supported platforms
-const platforms: {[index: string]: any} = {
-  instagram: {
-    backgroundColor: "bg-gradient-to-tr from-amber-500 to-fuchsia-700",
-    icon: <FaInstagram />
-  },
-  "twitch": {
-    backgroundColor: "bg-purple-500",
-    icon: <FaTwitch />
-  },
-  "twitter": {
-    backgroundColor: "bg-blue-500",
-    icon: <FaTwitter />
-  },
-  "youtube": {
-    backgroundColor: "bg-red-600",
-    icon: <FaYoutube />
-  },
-  "linkedin": {
-    backgroundColor: "bg-blue-300",
-    icon: <FaLinkedinIn />
-  },
-  "facebook": {
-    backgroundColor: "bg-blue-600",
-    icon: <FaFacebookF />
-  },
-  "spotify": {
-    backgroundColor: "bg-green-500",
-    icon: <FaSpotify />
-  },
-  "patreon": {
-    backgroundColor: "bg-red-600",
-    icon: <FaPatreon />
-  },
-  "github": {
-    backgroundColor: "bg-gray-500",
-    icon: <FaGithub />
-  }
-}
-
-type LinkType = {
-  platform: string,
-  description: string,
-  url: string,
-  customColor?: string
-}
-
-const LinkItem = ({platform, description, url, customColor}: LinkType) => {
-  let backgroundColor = 'bg-white';
-  let icon = <FaGlobeAmericas />
+const LinkItem = ({ platform, description, url, customColor }: LinkType) => {
+  let backgroundColor = "bg-white";
+  let icon = <FaGlobeAmericas />;
   if (platform in platforms) {
-    backgroundColor = platforms[platform].backgroundColor
-    icon = platforms[platform].icon
+    backgroundColor = platforms[platform].backgroundColor;
+    icon = platforms[platform].icon;
   }
 
   if (customColor) backgroundColor = customColor;
 
   return (
-    <a 
+    <a
       href={url}
+      className="m-auto w-max"
+      id={`${config.name}-${platform}`}
       rel="noreferrer"
       target="_blank"
     >
       <li
-      id={`${config.name}-${platform}`}
-      className={`${backgroundColor} p-2 rounded-xl`}
+        className={
+          `${backgroundColor} w-64 min-w-max p-2
+          rounded-xl transition duration-150
+          hover:scale-105 sm:w-72`
+        }
       >
         <div className="p-0.5 rounded-xl w-full flex justify-between">
-          <span className="self-center text-2xl">
-            {icon}
-          </span>
+          <span className="self-center text-2xl">{icon}</span>
           <p>{description}</p>
         </div>
       </li>
     </a>
-  )
-}
+  );
+};
 
-const App = () => (
-  <main className={`w-screen h-full bg-neutral-900 font-sans`}>
-    <section id="profile" className="p-8">
-      <article
-        id="profile-details" 
-        className="text-center text-white"
-      >
-        <img
-          src={config.profilePhoto}
-          alt={`${config.name}'s profile picture`}
-          className="w-16 m-auto my-4 rounded-full"
-        />
-        <h1 className="text-xl">{config.name}</h1>
-        <h2 className="text-md text-gray-400">{`< ${config.nickname} >`}</h2>
-      </article>
-    </section>
-    <section id="external-links" className="p-8">
-      <ul className="grid grid-cols-1 gap-y-2">
-        <LinkItem platform="twitch" description="Ti7oyan" url="https://instagram.com/ticianomorvan" />
-        <LinkItem platform="youtube" description="Ti7oyan" url="https://instagram.com/ticianomorvan" />
-        <LinkItem platform="instagram" description="ticianomorvan" url="https://instagram.com/ticianomorvan" />
-        <LinkItem platform="website" description="Mi sitio web 🚀" url="https://ticianomorvan.me" customColor="bg-blue-500" />
-        <LinkItem platform="linkedin" description="Ticiano Morvan" url="https://instagram.com/ticianomorvan" />
-        <LinkItem platform="github" description="Ti7oyan" url="https://github.com/Ti7oyan" />
-      </ul>
-    </section>
-  </main>
-)
+const App = () => {
+
+  // Animations
+  useEffect(() => {
+    let timeline = anime.timeline({
+      easing: 'easeOutQuad',
+      duration: 700,
+      delay: 300
+    })
+
+    timeline.add({
+      // Animating the profle picture and description.
+      targets: document.getElementById('profile'),
+      opacity: ['0%', '100%'],
+      translateY: ['-0.5em', '0'],
+      scale: ['0.95', '1']
+    })
+    .add({
+      // Animating the external links.
+      targets: document.getElementById('external-links'),
+      opacity: ['0%', '100%'],
+      translateY: ['-1em', '0'],
+    })
+  }, [])
+  return (
+    <main className={`w-full min-h-screen max-h-max bg-neutral-900 font-sans`}>
+      <section id="profile" className="p-8 pb-0">
+        { /* Profile picture and its description */ }
+        <article id="profile-details" className="text-center text-white">
+          <img
+            src={config.profilePhoto}
+            alt={`${config.name}'s profile picture`}
+            className="w-32 m-auto my-4 rounded-full"
+          />
+          <h1 className="text-xl">{config.name}</h1>
+          <h2 className="text-md text-gray-400">{`< ${config.nickname} >`}</h2>
+        </article>
+      </section>
+      <section id="external-links" className="p-8">
+        { /* External links */}
+        <ul className="grid grid-cols-1 gap-y-2.5">
+          { externalLinks.map((link) => {
+            return (
+              <LinkItem
+                platform={link.platform}
+                description={link.description}
+                url={link.url}
+                customColor={link.customColor}
+              />
+            )
+          }) }
+        </ul>
+      </section>
+      <footer className="flex justify-center">
+        <p className="text-gray-700">Diseñado por Ticiano Morvan</p>
+      </footer>
+    </main>
+  );
+};
 
 export default App;
