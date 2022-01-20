@@ -97,7 +97,7 @@ const App = () => (
         <img
           src={config.profilePhoto}
           alt={`${config.name}'s profile picture`}
-          className="w-6/12 m-auto my-4 rounded-full"
+          className="w-16 m-auto my-4 rounded-full"
         />
         <h1 className="text-xl">{config.name}</h1>
         <h2 className="text-md text-gray-400">{`< ${config.nickname} >`}</h2>
