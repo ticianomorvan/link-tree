@@ -102,9 +102,6 @@ const App = () => {
           }) }
         </ul>
       </section>
-      <footer className="flex justify-center">
-        <p className="text-gray-700">Diseñado por Ticiano Morvan</p>
-      </footer>
     </main>
   );
 };
